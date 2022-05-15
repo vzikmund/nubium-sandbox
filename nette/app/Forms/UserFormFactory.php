@@ -49,7 +49,7 @@ final class UserFormFactory
 
         $form->onSuccess[] = function (Form $form, $values) use ($onSuccess) {
 
-            $row = $this->userModel->getByLogin($values->login)->fetch();
+            $row = $this->userModel->getByLogin($values->login, true)->fetch();
 
             # kontrola existence uzivatele
             if(!$row){

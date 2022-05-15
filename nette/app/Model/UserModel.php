@@ -38,11 +38,34 @@ final class UserModel extends BaseModel
     }
 
     /**
+     * Ziskat uzivatele podle jeho loginu
      * @param string $login
+     * @param bool $activeOnly
      * @return Selection
      */
-    public function getByLogin(string $login):Selection{
-        return $this->getTable()->where("login", $login);
+    public function getByLogin(string $login, bool $activeOnly = false): Selection
+    {
+        $selection = $this->getTable()->where("login", $login);
+        if ($activeOnly) {
+            $selection->where("is_active", 1);
+        }
+
+        return $selection;
+    }
+
+
+    /**
+     * Kontrola, jestli je aktualne prihlaseny uzivatel stale aktivni
+     * @param int $idUser
+     * @return bool
+     */
+    public function isUserActive(int $idUser): bool
+    {
+        $row = $this->getTable()->where("id", $idUser)
+            ->where("is_active", 1)->fetch();
+
+        return $row !== null;
+
     }
 
 

@@ -63,9 +63,10 @@ CREATE TABLE IF NOT EXISTS `article_rating`
     CHARACTER SET utf8mb4;
 
 -- password === 123456789
-INSERT INTO user(login, first_name, last_name, password)
-VALUES ('user_1', 'User', 'One', '$2a$12$6U0u7ew.RxdAZDTeY9hSw.rywL3/4Wnm3o/5IilNyr0.mq/i7c4eG'),
-       ('user_2', 'User', 'Two', '$2a$12$6U0u7ew.RxdAZDTeY9hSw.rywL3/4Wnm3o/5IilNyr0.mq/i7c4eG');
+INSERT INTO user(login, first_name, last_name, password,is_active)
+VALUES ('user_1', 'User', 'One', '$2a$12$6U0u7ew.RxdAZDTeY9hSw.rywL3/4Wnm3o/5IilNyr0.mq/i7c4eG',1),
+       ('user_2', 'User', 'Two', '$2a$12$6U0u7ew.RxdAZDTeY9hSw.rywL3/4Wnm3o/5IilNyr0.mq/i7c4eG',1),
+       ('user_3', 'User', 'Three', '$2a$12$6U0u7ew.RxdAZDTeY9hSw.rywL3/4Wnm3o/5IilNyr0.mq/i7c4eG',0);
 
 insert into article(user_id, link, title, excerpt, content, status)
 VALUES (1, 'article-1', 'Article 1',
