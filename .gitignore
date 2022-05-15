@@ -1,2 +1,4 @@
 .idea
 database/data
+.DS_Store
+app/.DS_Store
