@@ -1,0 +1,63 @@
+services:
+  nginx:
+    build: ./nginx/
+    container_name: nginx-container
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+    links:
+      - php
+    volumes_from:
+      - app-data
+
+  php:
+    build: ./php/
+    container_name: php-container
+    environment:
+      - NETTE_DEBUG=1
+    links:
+      - mysql
+    expose:
+      - 9000
+    volumes_from:
+      - app-data
+
+  app-data:
+    image: php:8.1-fpm
+    container_name: app-data-container
+    volumes:
+      - ./nette:/var/www/html/
+    command: "true"
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - 8081:80
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: root
+
+  mysql:
+    image: mysql:8.0.20
+    container_name: mysql-container
+    restart: always
+    ports:
+      - 3306:3306
+    volumes_from:
+      - mysql-data
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      TZ: Europe/Prague
+
+  mysql-data:
+    image: mysql:8.0.20
+    container_name: mysql-data-container
+    volumes:
+      - ./database/data:/var/lib/mysql
+      - ./database/init/init.sql:/docker-entrypoint-initdb.d/init.sql
+    command:
+      - --sql_mode=STRICT_ALL_TABLES
