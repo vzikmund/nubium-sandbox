@@ -1,0 +1,26 @@
+{define bs-form $formName}
+    <form n:name=$formName>
+
+        <div class="alert alert-danger" n:ifcontent>
+            <div n:foreach="$form->ownErrors as $error">{$error}</div>
+        </div>
+
+        <div n:foreach="$form->controls as $name => $input"
+            n:class="'mb-3', $input->required ? required, $input->error? has-error">
+
+            {if $input->getOption(type) in [text, select, textarea]}
+                <label n:name=$input class="form-label">{$input->label}</label>
+                <input n:name=$input class="form-control">
+                <div class="form-text" n:ifcontent>
+                    {$input->error ?: $input->getOption(description)}
+                </div>
+            {elseif $input->getOption(type) === button}
+                {input $input, class=>'btn btn-primary'}
+            {else}
+                {input $input}
+            {/if}
+
+        </div>
+
+    </form>
+{/define}

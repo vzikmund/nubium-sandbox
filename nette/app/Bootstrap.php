@@ -16,6 +16,7 @@ class Bootstrap
 		$appDir = dirname(__DIR__);
 
 		$isLocal = getenv("NETTE_DEBUG") == 1;
+
 		$configurator->setDebugMode($isLocal);
 		$configurator->enableTracy($appDir . '/log');
 
@@ -28,7 +29,18 @@ class Bootstrap
 
 		$configurator->addConfig($appDir . '/config/common.neon');
 		$configurator->addConfig($appDir . '/config/services.neon');
-		$configurator->addConfig($appDir . '/config/local.neon');
+        $configurator->addConfig($appDir . '/config/form_errors.neon');
+
+        # ziskani konfiguracniho souboru podle instance
+        $envConfig = $isLocal ? 'local.neon' : 'prod.neon';
+        $envConfigPath = $appDir . '/config/' . $envConfig;
+
+        if(!file_exists($envConfigPath)){
+            echo "config file $envConfig not found";
+            exit;
+        }
+
+		$configurator->addConfig($envConfigPath);
 
 		return $configurator;
 	}

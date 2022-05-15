@@ -1,3 +1,4 @@
+{import component/form.latte}
 <!DOCTYPE html>
 <html lang="cs">
 <head>
@@ -11,11 +12,41 @@
 
 <body>
 
-{*}<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>{*}
+<div class="shadow-sm">
+    <div class="container">
+        <header class="d-flex  justify-content-center py-3">
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a n:href="Homepage:" n:class="$presenter->isLinkCurrent('Homepage:') ? active, nav-link">Domů</a>
+                </li>
+                {if $user->isLoggedIn()}
+                    <li class="nav-item">
+                        <a n:href="User:" n:class="$presenter->isLinkCurrent('User:')? active, nav-link">Účet</a>
+                    </li>
+                {else}
+                    <li class="nav-item">
+                        <a n:href="User:registration" n:class="$presenter->isLinkCurrent('User:registration')? active, nav-link">Registrace</a>
+                    </li>
+                    <li class="nav-item">
+                        <a n:href="User:signIn" n:class="$presenter->isLinkCurrent('User:signIn')? active, nav-link">Přihlášení</a>
+                    </li>
+                {/if}
+            </ul>
+        </header>
+    </div>
+</div>
+
+<div class="container my-2">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6">
+            <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
+        </div>
+    </div>
+</div>
 
 
 <div class="container">
-        {include content}
+    {include content}
 </div>
 
 {block scripts}
