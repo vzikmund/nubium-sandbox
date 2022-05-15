@@ -21,15 +21,10 @@ final class HomepagePresenter extends BasePresenter
 
     /**
      * Defaultni sloupec pro razeni
-     * @var string
+     * @persistent
      */
     public string $order = "id";
 
-    /**
-     * Defaultni smer razeni
-     * @var string
-     */
-    public string $direction = "ASC";
 
     /** @var ArticleFactory @inject */
     public ArticleFactory $articleFactory;
@@ -54,8 +49,10 @@ final class HomepagePresenter extends BasePresenter
      */
     public function renderDefault(): void
     {
+
+        $this->template->order = $this->order;
         $this->template->articles = $this->articleFactory->getPageArticles(
-            $this->page, $this->order, $this->direction
+            $this->page, $this->order
         );
         $this->template->paginator = $this->articleFactory->getPaginator($this->page);
     }
@@ -68,7 +65,7 @@ final class HomepagePresenter extends BasePresenter
      * @return void
      * @throws \Nette\Application\AbortException
      */
-    public function handleVote(int $article, string $vote):void
+    public function handleVote(int $article, string $vote): void
     {
 
         # kontrola volani ajaxem

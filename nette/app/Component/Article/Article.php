@@ -20,7 +20,7 @@ use Nette\Utils\DateTime;
  * @property-read string $authorLastname
  * @property-read DateTime $createdAt
  * @property-read DateTime|null $changedAt
- * @property-read int $rating
+ * @property-read int|null $rating
  */
 final class Article
 {
@@ -78,8 +78,8 @@ final class Article
         return $this->row["changed_at"];
     }
 
-    protected function getRating():int{
-        return (int)$this->row["rating"];
+    protected function getRating():?int{
+        return $this->row["rating"] ? (int)$this->row["rating"] : null;
     }
 
     /**

@@ -1,5 +1,6 @@
 {varType App\Component\Article\Article[] $articles}
 {varType Nette\Utils\Paginator $paginator}
+{varType string $order}
 {block content}
 
 {if count($articles) === 0}
@@ -11,6 +12,14 @@
         </div>
     </div>
 {else}
+
+    <div class="mb-3 text-center">
+        <p class="lead">řazení</p>
+        <a n:href="this, order=>id" n:class="'btn btn-outline-secondary', $order === id?active">základní</a>
+        <a n:href="this, order=>date" n:class="'btn btn-outline-secondary', $order === date?active">datum vložení</a>
+        <a n:href="this, order=>title" n:class="'btn btn-outline-secondary', $order === title?active">nadpis</a>
+        <a n:href="this, order=>vote" n:class="'btn btn-outline-secondary', $order === vote?active">hodnocení</a>
+    </div>
 
     {snippet articles-area}
         <div class="row justify-content-center" n:foreach="$articles as $id => $article">
@@ -32,6 +41,7 @@
                                 {/if}
                             </div>
                             {*}
+                            <!-- link na detail clanku -->
                             <div class="col mb-2 mb-sm-0 text-center text-sm-end">
                                 <a href="" class="btn btn-sm btn-dark">detail</a>
                             </div>
@@ -40,7 +50,7 @@
                         <p class="card-text">
                             <small class="text-muted">Vytvořeno: {$article->createdAt|date:'d. m. Y'}</small>
                             <br/>
-                            <small class="text-muted">Hodnocení: {$article->rating}</small>
+                            <small class="text-muted">Hodnocení: {$article->rating ?: '-'}</small>
                         </p>
                     </div>
                 </div>

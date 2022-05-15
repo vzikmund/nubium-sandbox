@@ -31,15 +31,23 @@ final class ArticleFactory
      * Vytvoreni instanci pro clanek
      * @param int $page
      * @param string $orderCol
-     * @param string $orderDirection
      * @return Article[]
      */
     public
-    function getPageArticles(int $page, string $orderCol, string $orderDirection): array
+    function getPageArticles(int $page, string $orderCol): array
     {
 
+        # vyber jak radit
+        $order = match ($orderCol){
+            "date" =>  "created_at DESC",
+            "title" => "title DESC",
+            "vote" => "SUM(`article_rating`.`value`) IS NULL, SUM(`article_rating`.`value`) DESC",
+            default => "id DESC"
+        };
+
+
         $rows = $this->articleModel->getPage($page, $this->articlesPerPage)
-            ->order(sprintf("%s %s", $orderCol, $orderDirection))
+            ->order($order)
             ->fetchAssoc("id");
 
         $articles = [];
