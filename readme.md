@@ -24,8 +24,9 @@ Celý SQL skript včetně vytvoření tabulek a jejich naplnění je v
 1. stažení repozitáře z gitu
 2. stažení composer balíčků zavoláním `composer install` ve složce `/nette`, kde se nachází aplikace
 3. spuštění dockeru `docker compose up -d` z kořenové složky, ve které se nachází `docker-compose.yml`.
-4. web je nyní dostupný na `http://nubium-sandbox.test/`
-5. phpMyAdmin na `localhost:8081`
+4. vložení řádku `127.0.0.1 nubium-sandbox.test` do souboru `/etc/hosts`
+5. web je nyní dostupný na `http://nubium-sandbox.test/`
+6. phpMyAdmin na `localhost:8081`
 
 ## Co by stálo za vylepšení
 
