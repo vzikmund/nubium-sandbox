@@ -4,7 +4,7 @@ Mini aplikace obsahuje výpis článků. Podporuje přihlášení a registraci u
 definováni 3 uživatelé.
 
 První dva uživatelé mají účty aktivní, třetí má účet deaktivovaný a nelze se za něj přihlásit. 
-Kontrola stavu účtu je realtime v `BasePresenter.php`, tzn. při změně flagu v DB, aplikace přihlášeného uživatele odhlásí.
+Kontrola stavu účtu je realtime v `BasePresenter.php`, tzn. že při změně flagu v DB aplikace přihlášeného uživatele odhlásí.
 
 | login  | pass      |  is_active  |
 |--------|-----------|:-----------:|
@@ -31,10 +31,10 @@ Celý SQL skript včetně vytvoření tabulek a jejich naplnění je v
 ## Co by stálo za vylepšení
 
 - Chybové hlášky z `Nette forms` vypsané v alertu by bylo vhodné předělat do jiného stylu zobrazení (např. text pod chybovým inputem)
-- Řazení je pro jednoduchost pouze `DESC` a v případě hodnocení jsou nehodnocené články řazeny až pod záporná hodnocení. Možná by bylo vhodné zapracovat na pořadí. Nejdříve vysoká, následně nehodnocené a poté záporné.
+- Řazení je pro jednoduchost pouze `DESC` a v případě hodnocení jsou nehodnocené články řazeny až pod záporná hodnocení. Možná by bylo vhodné zapracovat na pořadí. Nejdříve vysoká hodnocení, následně nehodnocené články a poté záporná hodnocení.
 - Tabulka článků obsahuje sloupec `link` a `content`. Je tedy připravena na zobrazení článku podle jeho adresy, ale detail článku není naprogramován.
-- V tabulce článků je více stavů. Stav `private` by byl zobrazen jen autorovi, dokud by článek nepublikoval (nepřesunul do stavu `public`). Stav `archived` by sloužil pro "odložení" článků do jiného hrnečku, pokud bychom jej již nechtěli v hlavním vlákně, ale chtěli bychom zachovat funkčnost linku kvůli SEO.
-- S Dockerem jsem přišel do styku úplně poprvé. Tak tam je určitě také prostor na zlepšení. Min. zprovoznění `HTTPS` pro nginx, nad kterým jsem zlomit hůl, a proto projekt funguje jen na `HTTP`.
+- V tabulce článků je více stavů. Stav `private` by byl zobrazen jen autorovi, dokud by článek nepublikoval (nepřesunul do stavu `public`). Stav `archived` by sloužil pro "odložení" článků do jiného hrnečku, pokud bychom je již nechtěli v hlavním vlákně, ale chtěli bychom zachovat funkčnost linků kvůli SEO.
+- S Dockerem jsem pracoval poprvé, ale rád bych se v něm do budoucna zlepšil. Min. zprovoznění `HTTPS` pro nginx, zatím projekt funguje jen na `HTTP`.
 
 ## Doba programování
 
