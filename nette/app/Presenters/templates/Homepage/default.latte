@@ -1,10 +1,9 @@
-{varType array $articles}
-{varType App\Component\Article\Article $article}
-
+{varType App\Component\Article\Article[] $articles}
+{varType Nette\Utils\Paginator $paginator}
 {block content}
 
 {if count($articles) === 0}
-    <div class="row">
+    <div class="row justify-content-center">
         <div class="col-12 col-sm-6 col-md-4">
             <div class="alert alert-info">
                 Žádné články nebyly nalezeny
@@ -12,30 +11,60 @@
         </div>
     </div>
 {else}
-    <div class="row justify-content-center" n:foreach="$articles as $id => $article">
-        {continueIf !$user->isLoggedIn() && $article->isVisibleForLoggedOnly()}
-        <div class="col-12 col-sm-6">
-            <div class="card mb-3">
 
-
-                <div class="card-body">
-                    <h5 class="card-title">{$article->title}</h5>
-                    <p class="card-text">{$article->excerpt}</p>
-                    <div class="row mb-3">
-                        <div class="col text-center text-sm-start" n:if="$user->isLoggedIn()">
-                            +1 | -1
+    {snippet articles-area}
+        <div class="row justify-content-center" n:foreach="$articles as $id => $article">
+            {continueIf !$user->isLoggedIn() && $article->isVisibleForLoggedOnly()}
+            <div class="col-12 col-md-6">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{$article->title}</h5>
+                        <p class="card-text">{$article->excerpt}</p>
+                        <div class="row mb-3">
+                            <div class="col text-center text-sm-start" n:if="$user->isLoggedIn()">
+                                {if $article->userVoted()}
+                                    Ohodnoceno.
+                                {else}
+                                    <a n:href="vote!, article=>$id, vote=>up"
+                                            class="ajax btn btn-sm btn-outline-success">+1</a>
+                                    <a n:href="vote!, article=>$id, vote=>down"
+                                            class="ajax btn btn-sm btn-outline-danger">+1</a>
+                                {/if}
+                            </div>
+                            {*}
+                            <div class="col mb-2 mb-sm-0 text-center text-sm-end">
+                                <a href="" class="btn btn-sm btn-dark">detail</a>
+                            </div>
+                            {*}
                         </div>
-                        <div class="col mb-2 mb-sm-0 text-center text-sm-end">
-                            <a href="" class="btn btn-sm btn-dark">detail</a>
-                        </div>
+                        <p class="card-text">
+                            <small class="text-muted">Vytvořeno: {$article->createdAt|date:'d. m. Y'}</small>
+                            <br/>
+                            <small class="text-muted">Hodnocení: {$article->rating}</small>
+                        </p>
                     </div>
-                    <p class="card-text">
-                        <small class="text-muted">Vytvořeno: {$article->createdAt|date:'d. m. Y'}</small>
-                    </p>
                 </div>
-
-
             </div>
         </div>
-    </div>
+    {/snippet}
+
+
+
+
+    <nav class="my-5">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" n:if="!$paginator->isFirst()">
+                <a class="page-link" n:href="Homepage:, page=>$paginator->page-1">Předchozí</a>
+            </li>
+            <li n:class="page-item, $x === $paginator->page ? active" n:for="$x = 1; $x <= $paginator->pageCount; $x++">
+                <a class="page-link" n:href="Homepage:, page=>$x">{$x}</a>
+            </li>
+            <li class="page-item" n:if="!$paginator->isLast()">
+                <a class="page-link" n:href="Homepage:, page=>$paginator->page+1">Další</a>
+            </li>
+        </ul>
+    </nav>
+
+
+
 {/if}

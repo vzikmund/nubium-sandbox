@@ -5,6 +5,7 @@ namespace App\Component\Article;
 
 
 use App\Model\ArticleModel;
+use App\Model\ArticleRatingModel;
 use Nette\Security\User;
 use Nette\Utils\Paginator;
 
@@ -18,7 +19,10 @@ final class ArticleFactory
         STATUS_ARCHIVED = "archived";
 
 
-    public function __construct(private int $articlesPerPage, private ArticleModel $articleModel, private User $user)
+    public function __construct(
+        private int                $articlesPerPage,
+        private ArticleModel       $articleModel,
+        private ArticleRatingModel $articleRatingModel, private User $user)
     {
     }
 
@@ -30,7 +34,8 @@ final class ArticleFactory
      * @param string $orderDirection
      * @return Article[]
      */
-    public function getPageArticles(int $page, string $orderCol, string $orderDirection): array
+    public
+    function getPageArticles(int $page, string $orderCol, string $orderDirection): array
     {
 
         $rows = $this->articleModel->getPage($page, $this->articlesPerPage)
@@ -40,7 +45,7 @@ final class ArticleFactory
         $articles = [];
 
         foreach ($rows as $id => $row) {
-            $articles[$id] = new Article($row, $this->user);
+            $articles[$id] = new Article($row, $this->user, $this->articleRatingModel);
         }
         return $articles;
 
@@ -51,7 +56,8 @@ final class ArticleFactory
      * @param int $currentPage
      * @return Paginator
      */
-    public function getPaginator(int $currentPage): Paginator
+    public
+    function getPaginator(int $currentPage): Paginator
     {
         $articlesCount = $this->articleModel->getTable()->where("status", self::STATUS_PUBLIC)->count("id");
         $paginator = new Paginator();

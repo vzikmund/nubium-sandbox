@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Component\Article;
 
 
+use App\Model\ArticleRatingModel;
 use Nette\Security\User;
 use Nette\SmartObject;
 use Nette\Utils\DateTime;
@@ -19,13 +20,14 @@ use Nette\Utils\DateTime;
  * @property-read string $authorLastname
  * @property-read DateTime $createdAt
  * @property-read DateTime|null $changedAt
+ * @property-read int $rating
  */
 final class Article
 {
 
     use SmartObject;
 
-    public function __construct(private array $row, private User $user)
+    public function __construct(private array $row, private User $user, private ArticleRatingModel $articleRatingModel)
     {
 
     }
@@ -76,12 +78,25 @@ final class Article
         return $this->row["changed_at"];
     }
 
+    protected function getRating():int{
+        return (int)$this->row["rating"];
+    }
+
     /**
      * Clanek viditelny pouze pro prihlasene
      * @return bool
      */
     public function isVisibleForLoggedOnly():bool{
         return $this->row["visible_logged_only"] === 1;
+    }
+
+    /**
+     * Informace, zda uzivatel uz hodnotil clanek
+     * @return bool|null
+     */
+    public function userVoted():?bool{
+        if(!$this->user->isLoggedIn()) return null;
+        return $this->articleRatingModel->userVoted($this->user->getId(), $this->getId());
     }
 
 }
