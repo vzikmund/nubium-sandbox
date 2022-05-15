@@ -73,6 +73,19 @@ final class UserPresenter extends BasePresenter
     }
 
     /**
+     * Formular pro zmenu hesla
+     * @return Form
+     */
+    protected function createComponentChangePassForm():Form{
+        return $this->userFormFactory->createChangePassword(
+            function(){
+                $this->flashMessage("Heslo bylo úspěšně změněno.", "success");
+                $this->redirect("this");
+            }
+        );
+    }
+
+    /**
      * @return void
      * @throws AbortException
      */

@@ -53,6 +53,14 @@ final class UserModel extends BaseModel
         return $selection;
     }
 
+    /**
+     * @param int $id
+     * @return ActiveRow|null
+     */
+    public function getById(int $id):?ActiveRow{
+        return $this->getTable()->get($id);
+    }
+
 
     /**
      * Kontrola, jestli je aktualne prihlaseny uzivatel stale aktivni

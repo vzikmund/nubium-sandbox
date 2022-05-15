@@ -23,9 +23,9 @@ final class UserFormFactory
      */
     public function __construct(
         private FormFactory $factory,
-        private UserModel $userModel,
-        private Passwords $passwords,
-        private User $user
+        private UserModel   $userModel,
+        private Passwords   $passwords,
+        private User        $user
     )
     {
     }
@@ -52,18 +52,18 @@ final class UserFormFactory
             $row = $this->userModel->getByLogin($values->login, true)->fetch();
 
             # kontrola existence uzivatele
-            if(!$row){
+            if (!$row) {
                 $form->addError("Jméno nebo heslo není správné.");
                 return;
             }
 
             # kontrola hesla
-            if(!$this->passwords->verify($values->password, $row["password"])){
+            if (!$this->passwords->verify($values->password, $row["password"])) {
                 $form->addError("Jméno nebo heslo není správné.");
                 return;
             }
 
-            if($this->passwords->needsRehash($row["password"])){
+            if ($this->passwords->needsRehash($row["password"])) {
                 $row->update(["password" => $this->passwords->hash($values->password)]);
             }
 
@@ -124,5 +124,40 @@ final class UserFormFactory
 
     }
 
+
+    /**
+     * Formular pro zmenu hesla
+     * @param callable $onSuccess
+     * @return Form
+     */
+    public function createChangePassword(callable $onSuccess): Form
+    {
+        $form = $this->factory->create();
+
+        # heslo musi mit alespon 7 znaku
+        $form->addPassword("password", "Heslo")
+            ->addRule($form::MIN_LENGTH, null, 7)
+            ->setRequired();
+
+        # string musi byt stejny jako v prvnim inputu
+        $form->addPassword("password_check", "Heslo znovu pro kontrolu")
+            ->addRule($form::EQUAL, "Hesla se neshodují", $form["password"])
+            ->setRequired()
+            ->setOmitted();
+
+        $form->addSubmit("send", "Změnit");
+
+        $form->onSuccess[] = function (Form $form, $values) use ($onSuccess) {
+
+            $idUser = $form->getPresenter()->getUser()->getId();
+            $this->userModel->getById($idUser)?->update(
+                ["password" => $this->passwords->hash($values->password)]
+            );
+
+            $onSuccess();
+        };
+
+        return $form;
+    }
 
 }
