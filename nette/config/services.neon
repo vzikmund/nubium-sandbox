@@ -9,3 +9,4 @@ search:
 services:
     security.passwords: Nette\Security\Passwords(::PASSWORD_BCRYPT, [cost: 12])
     - App\Router\RouterFactory::createRouter
+    - App\Component\Article\ArticleFactory(%articlesPerPage%)

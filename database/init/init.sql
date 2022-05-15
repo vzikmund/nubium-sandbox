@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `user`
     `first_name`    VARCHAR(15)  NOT NULL,
     `last_name`     VARCHAR(15)  NOT NULL,
     `password`      VARCHAR(255) NOT NULL,
-    `is_active`     TINYINT      NOT NULL DEFAULT 1,
+    `is_active`     BOOLEAN      NOT NULL DEFAULT 1,
     `registered_at` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
@@ -22,15 +22,16 @@ CREATE TABLE IF NOT EXISTS `user`
 
 CREATE TABLE IF NOT EXISTS `article`
 (
-    `id`         INT UNSIGNED                           NOT NULL AUTO_INCREMENT,
-    `user_id`    INT UNSIGNED                           NOT NULL,
-    `link`       VARCHAR(255)                           NOT NULL,
-    `title`      VARCHAR(100)                           NOT NULL,
-    `excerpt`    VARCHAR(255)                           NOT NULL,
-    `content`    TEXT                                   NOT NULL,
-    `status`     ENUM ('private', 'public', 'archived') NOT NULL DEFAULT 'private',
-    `created_at` DATETIME                               NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `changed_at` DATETIME                               NULL     DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    `id`                  INT UNSIGNED                           NOT NULL AUTO_INCREMENT,
+    `user_id`             INT UNSIGNED                           NOT NULL,
+    `link`                VARCHAR(255)                           NOT NULL,
+    `title`               VARCHAR(100)                           NOT NULL,
+    `excerpt`             VARCHAR(255)                           NOT NULL,
+    `content`             TEXT                                   NOT NULL,
+    `status`              ENUM ('private', 'public', 'archived') NOT NULL DEFAULT 'private',
+    `visible_logged_only` BOOLEAN                                NOT NULL DEFAULT 0,
+    `created_at`          DATETIME                               NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `changed_at`          DATETIME                               NULL     DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     UNIQUE INDEX `id_UNIQUE` (`id` ASC),
     UNIQUE INDEX `title_UNIQUE` (`title` ASC),
@@ -63,10 +64,10 @@ CREATE TABLE IF NOT EXISTS `article_rating`
     CHARACTER SET utf8mb4;
 
 -- password === 123456789
-INSERT INTO user(login, first_name, last_name, password,is_active)
-VALUES ('user_1', 'User', 'One', '$2a$12$6U0u7ew.RxdAZDTeY9hSw.rywL3/4Wnm3o/5IilNyr0.mq/i7c4eG',1),
-       ('user_2', 'User', 'Two', '$2a$12$6U0u7ew.RxdAZDTeY9hSw.rywL3/4Wnm3o/5IilNyr0.mq/i7c4eG',1),
-       ('user_3', 'User', 'Three', '$2a$12$6U0u7ew.RxdAZDTeY9hSw.rywL3/4Wnm3o/5IilNyr0.mq/i7c4eG',0);
+INSERT INTO user(login, first_name, last_name, password, is_active)
+VALUES ('user_1', 'User', 'One', '$2a$12$6U0u7ew.RxdAZDTeY9hSw.rywL3/4Wnm3o/5IilNyr0.mq/i7c4eG', 1),
+       ('user_2', 'User', 'Two', '$2a$12$6U0u7ew.RxdAZDTeY9hSw.rywL3/4Wnm3o/5IilNyr0.mq/i7c4eG', 1),
+       ('user_3', 'User', 'Three', '$2a$12$6U0u7ew.RxdAZDTeY9hSw.rywL3/4Wnm3o/5IilNyr0.mq/i7c4eG', 0);
 
 insert into article(user_id, link, title, excerpt, content, status)
 VALUES (1, 'article-1', 'Article 1',

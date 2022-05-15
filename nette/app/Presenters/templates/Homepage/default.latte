@@ -1,1 +1,41 @@
+{varType array $articles}
+{varType App\Component\Article\Article $article}
+
 {block content}
+
+{if count($articles) === 0}
+    <div class="row">
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="alert alert-info">
+                Žádné články nebyly nalezeny
+            </div>
+        </div>
+    </div>
+{else}
+    <div class="row justify-content-center" n:foreach="$articles as $id => $article">
+        {continueIf !$user->isLoggedIn() && $article->isVisibleForLoggedOnly()}
+        <div class="col-12 col-sm-6">
+            <div class="card mb-3">
+
+
+                <div class="card-body">
+                    <h5 class="card-title">{$article->title}</h5>
+                    <p class="card-text">{$article->excerpt}</p>
+                    <div class="row mb-3">
+                        <div class="col text-center text-sm-start" n:if="$user->isLoggedIn()">
+                            +1 | -1
+                        </div>
+                        <div class="col mb-2 mb-sm-0 text-center text-sm-end">
+                            <a href="" class="btn btn-sm btn-dark">detail</a>
+                        </div>
+                    </div>
+                    <p class="card-text">
+                        <small class="text-muted">Vytvořeno: {$article->createdAt|date:'d. m. Y'}</small>
+                    </p>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+{/if}

@@ -1,4 +1,5 @@
 parameters:
+    articlesPerPage: 10
 
 
 application:
